@@ -33,8 +33,10 @@ public class BusinessDaoImpl implements BusinessDao {
             }
         } catch (Exception throwables) {
             throwables.printStackTrace();
+        }finally {
+            JDBC.close(resultSet,preparedStatement,connection);
         }
-        JDBC.close(resultSet,preparedStatement,connection);
+
         return arrayList;
     }
 }

@@ -29,8 +29,10 @@ public class AdminDaoImpl {
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
+        }finally {
+            JDBC.close(resultSet,preparedStatement,connection);
         }
-        JDBC.close(resultSet,preparedStatement,connection);
+
         return arrayList;
     }
 }
