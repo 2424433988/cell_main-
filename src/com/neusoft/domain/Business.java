@@ -19,6 +19,10 @@ public class Business {
         this.deliveryPrice = deliveryPrice;
     }
 
+    public Business() {
+
+    }
+
     public Integer getBusinessId() {
         return businessId;
     }

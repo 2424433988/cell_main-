@@ -15,6 +15,10 @@ public class Food {
         this.businessId = businessId;
     }
 
+    public Food() {
+
+    }
+
     public Integer getFoodId() {
         return foodId;
     }
