@@ -26,7 +26,7 @@ public class operation {
 //        if (flag==1)System.out.println("删除成功！");
 //        else System.out.println("删除失败！");
         //更新用例
-        Business business =new Business(200000,"78964","脆皮鸡",null,"小吃",9000.312,54000.639);
+        Business business =new Business(200000,"78964","脆皮鸡","街道办","小吃",9000.312,54000.639);
         businessDao.updateBusiness(business);
     }
 }
