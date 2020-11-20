@@ -11,8 +11,8 @@ public interface BusinessDao {
     //保存商家 返回值是保存商家时自动生成的主键id的值
     public int saveBusiness(Business business);
     public int saveBusiness(String BusinessName, String password);
-//    //删除商家
-//    public boolean removeBusiness(Integer Id,String BusinessName,String password);
+    //删除商家
+    public int removeBusiness(Integer BusinessId,String BusinessName,String password);
 //    //修改商家
 //    public int updateBusiness(String BusinessName);
 //    //通过id查询商家信息

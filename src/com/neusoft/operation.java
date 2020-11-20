@@ -13,11 +13,17 @@ import java.util.ArrayList;
 public class operation {
     public static void main(String [] args){
         BusinessDaoImpl businessDao = new BusinessDaoImpl();
+        //查询用例
 //        ArrayList<Business> arrayList = (ArrayList<Business>) businessDao.businessList();
 //        for (Business business:arrayList){
 //            System.out.println(business);
 //        }
-        System.out.println(businessDao.saveBusiness("小杰",null));
-        System.out.println(businessDao.saveBusiness("小华","96732"));
+        //保存用例
+//        System.out.println(businessDao.saveBusiness("小杰",null));
+//       System.out.println(businessDao.saveBusiness("小华","96732"));
+        //删除用例
+        int flag= businessDao.removeBusiness(100018,"小华","96732");
+        if (flag==1)System.out.println("删除成功！");
+        else System.out.println("删除失败！");
     }
 }

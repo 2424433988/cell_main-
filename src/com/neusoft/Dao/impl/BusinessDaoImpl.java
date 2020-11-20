@@ -4,7 +4,6 @@ import com.neusoft.Dao.BusinessDao;
 import com.neusoft.domain.Business;
 import com.neusoft.untils.JDBC;
 
-import java.security.interfaces.RSAKey;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -104,27 +103,42 @@ public class BusinessDaoImpl implements BusinessDao {
         }
         return BusinessId;
     }
-//    /**
-//     * 删除商户
-//     * @param BusinessName
-//     * @return  删除结果
-//     */
-//    public boolean removeBusiness(Integer Id,String BusinessName,String password){
-////        int BusinessId = 0;
-//        Connection connection =null;
-//        PreparedStatement preparedStatement = null;
-//        ResultSet resultSet =null;
-//        String sql = "insert into Business(BusinessName,password) values (BusinessName,password)";
-//        try {
-//
-//            connection = JDBC.getConnection();
-//            preparedStatement = connection.prepareStatement(sql);
-//            resultSet = preparedStatement.getGeneratedKeys();
-//
-//        } catch (Exception throwables) {
-//            throwables.printStackTrace();
-//        }
-//
-//
-//    }
+
+    /**
+     * 删除商户
+     * @param BusinessId 商户id
+     * @param BusinessName  商户名称
+     * @param password 商户账号密码
+     * @return
+     */
+    public int removeBusiness(Integer BusinessId, String BusinessName, String password){
+        int result = 0;
+        Connection connection =null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet =null;
+        String sql = "delete from business where businessId = ? and businessName = ? and password = ?";
+        try {
+            connection = JDBC.getConnection();
+            //开启事务
+            connection.setAutoCommit(false);
+            preparedStatement = connection.prepareStatement(sql,PreparedStatement.RETURN_GENERATED_KEYS);
+            preparedStatement.setInt(1,BusinessId);
+            preparedStatement.setString(2,BusinessName);
+            preparedStatement.setString(3,password);
+            result = preparedStatement.executeUpdate();
+            connection.commit();
+        } catch (Exception throwables) {
+            result = 0;
+            try {
+                connection.rollback();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            throwables.printStackTrace();
+        }finally {
+            JDBC.close(resultSet,preparedStatement,connection);
+        }
+        return result;
+
+    }
 }
