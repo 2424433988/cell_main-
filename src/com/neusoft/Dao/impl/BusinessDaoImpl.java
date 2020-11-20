@@ -116,12 +116,12 @@ public class BusinessDaoImpl implements BusinessDao {
         Connection connection =null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet =null;
-        String sql = "delete from business where businessId = ? and businessName = ? and password = ?";
+        String sql = "delete from business where businessId = ? and businessName = ? and password = ?;";
         try {
             connection = JDBC.getConnection();
             //开启事务
             connection.setAutoCommit(false);
-            preparedStatement = connection.prepareStatement(sql,PreparedStatement.RETURN_GENERATED_KEYS);
+            preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1,BusinessId);
             preparedStatement.setString(2,BusinessName);
             preparedStatement.setString(3,password);
@@ -140,5 +140,75 @@ public class BusinessDaoImpl implements BusinessDao {
         }
         return result;
 
+    }
+
+    /**
+     * 更新商户信息
+     * @param business 商户
+     * @return
+     */
+    //存在问题
+    public int updateBusiness(Business business){
+        int result = 0;
+        Connection connection =null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        String sql = "update business set businessName = ? ,businessAddress = ? ,businessExplain =? , starPrice =?,deliveryPrice=? where businessId =?";
+        try {
+            connection = JDBC.getConnection();
+            //开始事务
+            connection.setAutoCommit(false);
+            preparedStatement = connection.prepareStatement(sql);
+            if(business.getBusinessName()!=null) preparedStatement.setString(1, business.getBusinessName());
+            if(business.getBusinessAddress()!=null) preparedStatement.setString(2, business.getBusinessAddress());
+            if(business.getBussinessExplain()!=null) preparedStatement.setString(3, business.getBussinessExplain());
+            if (business.getStarPrice()!=0.0) preparedStatement.setDouble(4,business.getStarPrice());
+            if (business.getDeliveryPrice()!=0.0) preparedStatement.setDouble(5,business.getDeliveryPrice());
+            preparedStatement.setInt(6,business.getBusinessId());
+            result = preparedStatement.executeUpdate();
+            connection.commit();
+        } catch (SQLException throwables) {
+            result = 0;
+            try {
+                connection.rollback();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            throwables.printStackTrace();
+        }finally {
+            JDBC.close(resultSet,preparedStatement,connection);
+        }
+        return result;
+    }
+//    public int updateBusiness_password(Integer BusinessId,String BusinessName,String password){
+//
+//    }
+    public Business getBusinessById(int id){
+        Connection connection =null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        Business business = null;
+        String sql = "select * from business where businessId = ?;";
+        try {
+            connection = JDBC.getConnection();
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1,business.getBusinessId());
+            resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                business.setBusinessId(resultSet.getInt("businessId"));
+                business.setBusinessName(resultSet.getString("businessName"));
+                business.setBusinessAddress(resultSet.getString("businessAddress"));
+                business.setBussinessExplain(resultSet.getString("businessExplain"));
+                business.setStarPrice(resultSet.getDouble("starPrice"));
+                business.setDeliveryPrice(resultSet.getDouble("deliveryPrice"));
+                business.setPassword(resultSet.getString("password"));
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }finally {
+            JDBC.close(resultSet,preparedStatement,connection);
+        }
+        return  business;
     }
 }

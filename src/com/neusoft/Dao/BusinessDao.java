@@ -13,9 +13,11 @@ public interface BusinessDao {
     public int saveBusiness(String BusinessName, String password);
     //删除商家
     public int removeBusiness(Integer BusinessId,String BusinessName,String password);
-//    //修改商家
-//    public int updateBusiness(String BusinessName);
-//    //通过id查询商家信息
-//    public Business getBusinessById(int id)
-//    //
+    //修改商家
+    public int updateBusiness(Business business);
+//    public int updateBusiness_password(Integer BusinessId,String BusinessName,String password);
+
+    //通过id查询商家信息
+    public Business getBusinessById(int id);
+
 }
