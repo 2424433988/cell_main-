@@ -13,10 +13,11 @@ import java.util.ArrayList;
 public class operation {
     public static void main(String [] args){
         BusinessDaoImpl businessDao = new BusinessDaoImpl();
-        ArrayList<Business> arrayList = (ArrayList<Business>) businessDao.businessList();
-        for (Business business:arrayList){
-            System.out.println(business);
-        }
-
+//        ArrayList<Business> arrayList = (ArrayList<Business>) businessDao.businessList();
+//        for (Business business:arrayList){
+//            System.out.println(business);
+//        }
+        System.out.println(businessDao.saveBusiness("小杰",null));
+        System.out.println(businessDao.saveBusiness("小华","96732"));
     }
 }
