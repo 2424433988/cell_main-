@@ -14,25 +14,32 @@ public class BusinessDaoImpl implements BusinessDao {
      * 查询所有商户信息
      * @return List<Business>
      */
-    public List<Business> businessList(){
-        ArrayList<Business> arrayList = new ArrayList<>();
+    public List<Business> listBusiness(String businessName,String businessAddress){
+        List<Business> arrayList = new ArrayList<>();
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-        String sql= "select * from business";
+        StringBuffer sql= new StringBuffer("select * from business where 1=1");
+        if ((businessAddress != null) && ! (businessAddress =="")){
+            sql.append(" and where business like '%"+businessAddress+"%'");
+        }
+        if ((businessName != null) && ! (businessName =="")){
+            sql.append(" and where business like '%"+businessName+"%'");
+        }
+        System.out.println(sql);
         try {
             connection = JDBC.getConnection();
-            preparedStatement = connection.prepareStatement(sql);
-            resultSet = preparedStatement.executeQuery(sql);
+            preparedStatement = connection.prepareStatement(sql.toString());
+            resultSet = preparedStatement.executeQuery();
             while(resultSet.next()){
                 Business business = new Business();
-                business.setBusinessId(resultSet.getInt(1));
-                business.setPassword(resultSet.getString(2));
-                business.setBusinessName(resultSet.getString(3));
-                business.setBusinessAddress(resultSet.getString(4));
-                business.setBussinessExplain(resultSet.getString(5));
-                business.setStarPrice(resultSet.getDouble(6));
-                business.setDeliveryPrice(resultSet.getDouble(7));
+                business.setBusinessId(resultSet.getInt("businessId"));
+                business.setPassword(resultSet.getString("password"));
+                business.setBusinessName(resultSet.getString("businessName"));
+                business.setBusinessAddress(resultSet.getString("businessAddress"));
+                business.setBussinessExplain(resultSet.getString("businessExplain"));
+                business.setStarPrice(resultSet.getDouble("starPrice"));
+                business.setDeliveryPrice(resultSet.getDouble("deliveryPrice"));
                 arrayList.add(business);
             }
         } catch (Exception throwables) {
@@ -107,24 +114,25 @@ public class BusinessDaoImpl implements BusinessDao {
     /**
      * 删除商户
      * @param BusinessId 商户id
-     * @param BusinessName  商户名称
-     * @param password 商户账号密码
+//     * @param BusinessName  商户名称
+//     * @param password 商户账号密码
      * @return
      */
-    public int removeBusiness(Integer BusinessId, String BusinessName, String password){
+    public int removeBusiness(Integer BusinessId/*, String BusinessName, String password*/){
         int result = 0;
         Connection connection =null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet =null;
-        String sql = "delete from business where businessId = ? and businessName = ? and password = ?;";
+        String sql = "delete from business where businessId = ? ;";
+//        and businessName = ? and password = ?
         try {
             connection = JDBC.getConnection();
             //开启事务
             connection.setAutoCommit(false);
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1,BusinessId);
-            preparedStatement.setString(2,BusinessName);
-            preparedStatement.setString(3,password);
+//            preparedStatement.setString(2,BusinessName);
+//            preparedStatement.setString(3,password);
             result = preparedStatement.executeUpdate();
             connection.commit();
         } catch (Exception throwables) {
@@ -147,7 +155,7 @@ public class BusinessDaoImpl implements BusinessDao {
      * @param business 商户
      * @return
      */
-    //存在问题
+//    //    存在问题
     public int updateBusiness(Business business){
         int result = 0;
         Connection connection =null;
@@ -211,4 +219,67 @@ public class BusinessDaoImpl implements BusinessDao {
         }
         return  business;
     }
+
+    @Override
+    public Business getBusinessByIdandpassword(Integer businessId, String password) {
+        Connection connection =null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        Business business = new Business();
+        String sql = "select * from business where businessId = ? and password = ?;";
+        try {
+            connection = JDBC.getConnection();
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1,businessId);
+            preparedStatement.setString(2,password);
+            resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                business.setBusinessId(resultSet.getInt("businessId"));
+                business.setBusinessName(resultSet.getString("businessName"));
+                business.setBusinessAddress(resultSet.getString("businessAddress"));
+                business.setBussinessExplain(resultSet.getString("businessExplain"));
+                business.setStarPrice(resultSet.getDouble("starPrice"));
+                business.setDeliveryPrice(resultSet.getDouble("deliveryPrice"));
+                business.setPassword(resultSet.getString("password"));
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }finally {
+            JDBC.close(resultSet,preparedStatement,connection);
+        }
+        return  business;
+    }
+
+    @Override
+    public int updateBusinesspassword(Integer businessId, String password) {
+        int result=0;
+        Connection connection =null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        String sql = "update business set password = ? where businessId =?";
+        try {
+            connection = JDBC.getConnection();
+            //开始事务
+            connection.setAutoCommit(false);
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1,password);
+            preparedStatement.setInt(2,businessId);
+            result = preparedStatement.executeUpdate();
+            connection.commit();
+        } catch (SQLException throwables) {
+            result = 0;
+            try {
+                connection.rollback();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            throwables.printStackTrace();
+        }finally {
+            JDBC.close(resultSet,preparedStatement,connection);
+        }
+        return  result;
+    }
+
+
 }
