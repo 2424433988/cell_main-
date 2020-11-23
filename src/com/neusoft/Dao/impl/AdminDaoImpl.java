@@ -16,7 +16,7 @@ public class AdminDaoImpl implements AdminDao {
     Connection connection = null;
     PreparedStatement preparedStatement = null;
     ResultSet resultSet = null;
-    Admin admin = null;
+    Admin admin =null;
     String sql= "select adminId from admin where adminName = ? and password = ?";
         try {
             connection = JDBC.getConnection();
@@ -24,9 +24,9 @@ public class AdminDaoImpl implements AdminDao {
             preparedStatement.setString(1,AdminName);
             preparedStatement.setString(2,Password);
             resultSet = preparedStatement.executeQuery();
-            admin.setAdminName(AdminName);
-            admin.setPassword(Password);
-            if (resultSet.next()) admin.setAdminId(resultSet.getInt(1));
+            while(resultSet.next()){
+                admin=new Admin(resultSet.getInt(1),AdminName,Password);
+            }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }finally {

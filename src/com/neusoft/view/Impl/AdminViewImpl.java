@@ -1,6 +1,7 @@
-package com.neusoft.Dao.impl;
+package com.neusoft.view.Impl;
 
 import com.neusoft.Dao.AdminDao;
+import com.neusoft.Dao.impl.AdminDaoImpl;
 import com.neusoft.domain.Admin;
 import com.neusoft.view.AdminView;
 
