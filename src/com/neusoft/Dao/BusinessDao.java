@@ -19,5 +19,8 @@ public interface BusinessDao {
 
     //通过id查询商家信息
     public Business getBusinessById(int id);
+    //通过id和password 查询商家所有信息
+    public Business getBusinessByIdandpassword(Integer buinessId,String password);
 
+    public int updateBusinesspassword(Integer businessId ,String password);
 }

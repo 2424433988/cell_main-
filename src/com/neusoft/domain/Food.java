@@ -61,12 +61,10 @@ public class Food {
 
     @Override
     public String toString() {
-        return "Food{" +
-                "foodId=" + foodId +
-                ", foodName='" + foodName + '\'' +
-                ", foodExplain='" + foodExplain + '\'' +
-                ", foodPrice=" + foodPrice +
-                ", businessId=" + businessId +
-                '}';
+        return  "食品编号=" + foodId +'\t'+
+                " 食品名称='" + foodName + '\t' +
+                " 备注='" + foodExplain + '\t' +
+                " 食品价格=" + foodPrice +'\t'+
+                " 所属商户编号=" + businessId ;
     }
 }

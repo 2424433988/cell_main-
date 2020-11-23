@@ -114,8 +114,8 @@ public class BusinessDaoImpl implements BusinessDao {
     /**
      * 删除商户
      * @param BusinessId 商户id
-     * @param BusinessName  商户名称
-     * @param password 商户账号密码
+//     * @param BusinessName  商户名称
+//     * @param password 商户账号密码
      * @return
      */
     public int removeBusiness(Integer BusinessId/*, String BusinessName, String password*/){
@@ -218,6 +218,67 @@ public class BusinessDaoImpl implements BusinessDao {
             JDBC.close(resultSet,preparedStatement,connection);
         }
         return  business;
+    }
+
+    @Override
+    public Business getBusinessByIdandpassword(Integer businessId, String password) {
+        Connection connection =null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        Business business = new Business();
+        String sql = "select * from business where businessId = ? and password = ?;";
+        try {
+            connection = JDBC.getConnection();
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1,businessId);
+            preparedStatement.setString(2,password);
+            resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                business.setBusinessId(resultSet.getInt("businessId"));
+                business.setBusinessName(resultSet.getString("businessName"));
+                business.setBusinessAddress(resultSet.getString("businessAddress"));
+                business.setBussinessExplain(resultSet.getString("businessExplain"));
+                business.setStarPrice(resultSet.getDouble("starPrice"));
+                business.setDeliveryPrice(resultSet.getDouble("deliveryPrice"));
+                business.setPassword(resultSet.getString("password"));
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }finally {
+            JDBC.close(resultSet,preparedStatement,connection);
+        }
+        return  business;
+    }
+
+    @Override
+    public int updateBusinesspassword(Integer businessId, String password) {
+        int result=0;
+        Connection connection =null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        String sql = "update business set password = ? where businessId =?";
+        try {
+            connection = JDBC.getConnection();
+            //开始事务
+            connection.setAutoCommit(false);
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1,password);
+            preparedStatement.setInt(2,businessId);
+            result = preparedStatement.executeUpdate();
+            connection.commit();
+        } catch (SQLException throwables) {
+            result = 0;
+            try {
+                connection.rollback();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            throwables.printStackTrace();
+        }finally {
+            JDBC.close(resultSet,preparedStatement,connection);
+        }
+        return  result;
     }
 
 
