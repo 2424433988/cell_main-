@@ -147,7 +147,7 @@ public class BusinessDaoImpl implements BusinessDao {
      * @param business 商户
      * @return
      */
-    //存在问题
+//    //    存在问题
     public int updateBusiness(Business business){
         int result = 0;
         Connection connection =null;
